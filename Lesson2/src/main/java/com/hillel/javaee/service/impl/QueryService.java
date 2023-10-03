@@ -1,12 +1,13 @@
 package com.hillel.javaee.service.impl;
 
+import com.hillel.javaee.dbmanager.DBConnectionHolder;
 import com.hillel.javaee.service.IService;
 
 import java.sql.*;
 
 public class QueryService implements IService {
 
-    private Connection connection;
+    private static Connection connection;
 
     public QueryService(Connection connection) {
         this.connection = connection;
@@ -15,6 +16,7 @@ public class QueryService implements IService {
     @Override
     public String getAllEmailsByUserId(int id) {
         try {
+            checkConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id, c.name, e.address FROM customer AS c INNER JOIN email_address AS e on c.id = e.customer_id WHERE c.id = ?");
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -32,18 +34,20 @@ public class QueryService implements IService {
             return stringBuilder.toString();
         } catch (SQLException e) {
             return "Bad Request";
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public String addNewCustomer(int id, String name, Date birthdate) {
         try {
+            checkConnection();
             connection.setAutoCommit(true);
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO customer (id, name, birthdate) VALUES (?, ?, ?)");
-            if (Integer.valueOf(id) == null || name.isEmpty() || birthdate == null) {
+            if (id == 0 || name.isEmpty() || birthdate == null) {
                 return String.format("%s, %s, %s", id, name, birthdate);
             }
-            System.out.println("name - " + name);
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, name);
             preparedStatement.setDate(3, birthdate);
@@ -51,7 +55,15 @@ public class QueryService implements IService {
         } catch (SQLException e) {
             e.printStackTrace();
             return String.format("%s, %s, %s", id, name, birthdate);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return null;
+    }
+
+    static void checkConnection() throws SQLException, ClassNotFoundException {
+        if (connection==null || connection.isClosed()){
+            connection = DBConnectionHolder.getConnection();
+        }
     }
 }

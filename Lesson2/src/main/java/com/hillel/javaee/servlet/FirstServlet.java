@@ -1,6 +1,9 @@
 package com.hillel.javaee.servlet;
 
 import com.hillel.javaee.service.IService;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebInitParam;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,20 +11,34 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.List;
 
 
-@WebServlet("/firstServlet")
+@WebServlet(
+        urlPatterns = "/firstServlet",
+        initParams = @WebInitParam(name = "name", value = "Oleg"))
 public class FirstServlet extends HttpServlet {
 
+
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void init(ServletConfig config) throws ServletException {
+        System.out.println(config.getInitParameter("name"));
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         IService service = (IService) req.getServletContext().getAttribute("service");
-        PrintWriter printWriter = resp.getWriter();
-        printWriter.write(service.getAllEmailsByUserId(Integer.parseInt(req.getParameter("id"))));
-        printWriter.close();
+        if (req.getParameter("id") != null) {
+//            PrintWriter printWriter = resp.getWriter();
+//            printWriter.write(service.getAllEmailsByUserId(Integer.parseInt(req.getParameter("id"))));
+//            printWriter.close();
+            if (req.getCookies() != null) {
+                resp.sendRedirect("http://localhost:8080/L2/thirdServlet");
+                return;
+            }
+        }
+        req.getRequestDispatcher("/secondServlet").forward(req, resp);
     }
 
     @Override
