@@ -31,6 +31,7 @@ public class QueryService implements IService {
                 stringBuilder.append("\n");
             }
             resultSet.close();
+            //connection.close();
             return stringBuilder.toString();
         } catch (SQLException e) {
             return "Bad Request";
@@ -52,6 +53,7 @@ public class QueryService implements IService {
             preparedStatement.setString(2, name);
             preparedStatement.setDate(3, birthdate);
             preparedStatement.executeUpdate();
+//            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return String.format("%s, %s, %s", id, name, birthdate);

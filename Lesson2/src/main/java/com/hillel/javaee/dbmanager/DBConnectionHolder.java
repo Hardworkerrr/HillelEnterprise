@@ -36,7 +36,7 @@ public class DBConnectionHolder {
             p.setMinEvictableIdleTimeMillis(30000);
             p.setMinIdle(10);
             p.setLogAbandoned(true);
-            p.setRemoveAbandoned(false);
+            p.setRemoveAbandoned(true);
             p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" + "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
             datasource = new DataSource();
             datasource.setPoolProperties(p);
