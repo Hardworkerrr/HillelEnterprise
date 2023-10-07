@@ -30,9 +30,6 @@ public class FirstServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         IService service = (IService) req.getServletContext().getAttribute("service");
         if (req.getParameter("id") != null) {
-//            PrintWriter printWriter = resp.getWriter();
-//            printWriter.write(service.getAllEmailsByUserId(Integer.parseInt(req.getParameter("id"))));
-//            printWriter.close();
             if (req.getCookies() != null) {
                 resp.sendRedirect("http://localhost:8080/L2/thirdServlet");
                 return;
