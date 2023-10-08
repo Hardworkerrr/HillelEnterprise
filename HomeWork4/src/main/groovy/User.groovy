@@ -33,7 +33,7 @@ class User {
         isReadyForCalculation = true;
     }
 
-    static String writeOperation(){
+    static String writeOperation() {
         println 'Hello, which operation you want to perform ? + , -, /, *, div, sin, cos, tan, log, ln, ^, sqrt or fact. Type one of them below.'
         Scanner scanner = new Scanner(System.in);
         println 'Write operation :'

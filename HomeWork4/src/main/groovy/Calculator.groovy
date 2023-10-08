@@ -9,7 +9,7 @@ class Calculator {
         if (expression.matches('[-,+,*,/]')
                 || expression.contains('div')
                 || expression.contains('exp')) {
-            if(expression.matches('exp')){
+            if (expression.matches('exp')) {
                 Scanner scanner = new Scanner(System.in)
                 println "Type number: "
                 BigDecimal firstNumber = new BigDecimal(scanner.next())
@@ -28,7 +28,7 @@ class Calculator {
             Scanner scanner = new Scanner(System.in)
             println "Type 1 number: "
             BigDecimal firstNumber = new BigDecimal(scanner.next())
-            choose(expression,firstNumber)
+            choose(expression, firstNumber)
         }
     }
 
