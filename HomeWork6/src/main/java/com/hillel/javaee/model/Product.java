@@ -1,4 +1,4 @@
-package com.hillel.javaee.models;
+package com.hillel.javaee.model;
 
 import java.util.ArrayList;
 

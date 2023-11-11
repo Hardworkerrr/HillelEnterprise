@@ -1,0 +1,1 @@
+INSERT INTO credentials (id,username, password, customer_id, is_active) VALUES (?,?,?,?,TRUE)

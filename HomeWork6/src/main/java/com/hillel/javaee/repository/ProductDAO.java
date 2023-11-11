@@ -1,7 +1,8 @@
 package com.hillel.javaee.repository;
 
 import com.hillel.javaee.dbmanager.DBConnectionPool;
-import com.hillel.javaee.models.Product;
+import com.hillel.javaee.model.Product;
+import com.hillel.javaee.utils.SpringScriptUtility;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -26,7 +27,8 @@ public class ProductDAO implements DefaultOperationsDAO<Product> {
     public ArrayList<Product> getAll() {
         try {
             Connection connection = DBConnectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, price, calories, quantity FROM product");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    SpringScriptUtility.readResourceSql("sql/getAllProducts.sql"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Product product = new Product();

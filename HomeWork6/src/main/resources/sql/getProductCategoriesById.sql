@@ -1,0 +1,1 @@
+SELECT category_id, name  FROM product_category JOIN category ON category_id=category.id WHERE product_id = ?

@@ -1,7 +1,8 @@
 package com.hillel.javaee.repository;
 
 import com.hillel.javaee.dbmanager.DBConnectionPool;
-import com.hillel.javaee.models.Customer;
+import com.hillel.javaee.model.Customer;
+import com.hillel.javaee.utils.SpringScriptUtility;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -34,7 +35,8 @@ public class CustomerDAO implements DefaultOperationsDAO<Customer> {
     public ArrayList<Customer> getAll() {
         try {
             Connection connection = DBConnectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, name, phone_number, email,birthday FROM customer");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    SpringScriptUtility.readResourceSql("sql/getAllCustomers.sql"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Customer customer = new Customer();
@@ -61,6 +63,43 @@ public class CustomerDAO implements DefaultOperationsDAO<Customer> {
 
     @Override
     public void create(Customer customer) {
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.
+                    readResourceSql("sql/createCustomer.sql"));
+            preparedStatement.setInt(1, getCustomersCount() + 1);
+            preparedStatement.setString(2, customer.getName());
+            preparedStatement.setString(3, customer.getPhoneNumber());
+            preparedStatement.setString(4, customer.getEmail());
+            preparedStatement.setDate(5, customer.getBirthday());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException | URISyntaxException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createWithCredentials(Customer customer, String username, String password) {
+        create(customer);
+        Customer newCustomer = getCustomerByEmail(customer.getEmail());
+        System.out.println(newCustomer.getId());
+        System.out.println(newCustomer.getName());
+        System.out.println(newCustomer.getEmail());
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.
+                    readResourceSql("sql/createCustomerWithCredentials.sql"));
+            preparedStatement.setInt(1, getCredentialsCount()+1);
+            preparedStatement.setString(2, username);
+            preparedStatement.setString(3, password);
+            preparedStatement.setInt(4, newCustomer.getId());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException | SQLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -74,5 +113,60 @@ public class CustomerDAO implements DefaultOperationsDAO<Customer> {
 
     }
 
+    public Customer getCustomerByEmail(String email) {
+        Customer customer = new Customer();
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.
+                    readResourceSql("sql/getCustomerByEmail.sql"));
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                customer.setId(resultSet.getInt(1));
+                customer.setName(resultSet.getString(2));
+                customer.setPhoneNumber(resultSet.getString(3));
+                customer.setEmail(email);
+                customer.setBirthday(resultSet.getDate(4));
+            }
+        } catch (ClassNotFoundException | SQLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return customer;
+    }
 
+    public int getCustomersCount() {
+        int count=0;
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.
+                    readResourceSql("sql/getCustomersCount.sql"));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException | SQLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return count;
+    }
+
+    public int getCredentialsCount() {
+        int count=0;
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.
+                    readResourceSql("sql/getCredentialsCount.sql"));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException | SQLException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return count;
+    }
 }

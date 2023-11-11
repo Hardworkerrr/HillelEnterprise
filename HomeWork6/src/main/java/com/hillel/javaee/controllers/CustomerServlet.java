@@ -1,7 +1,7 @@
 package com.hillel.javaee.controllers;
 
 
-import com.hillel.javaee.models.Customer;
+import com.hillel.javaee.model.Customer;
 import com.hillel.javaee.service.CustomerManipulation;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

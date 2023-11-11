@@ -1,8 +1,8 @@
 package com.hillel.javaee.repository;
 
 import com.hillel.javaee.dbmanager.DBConnectionPool;
-import com.hillel.javaee.models.Category;
-import com.hillel.javaee.models.Product;
+import com.hillel.javaee.model.Category;
+import com.hillel.javaee.utils.SpringScriptUtility;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -26,7 +26,8 @@ public class CategoryDAO implements DefaultOperationsDAO<Category> {
     public ArrayList<Category> getProductCategoriesByID(int id) {
         try {
             Connection connection = DBConnectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT category_id, name  FROM product_category JOIN category ON category_id=category.id WHERE product_id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    SpringScriptUtility.readResourceSql("sql/getProductCategoriesById.sql"));
             preparedStatement.setInt(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -39,10 +40,6 @@ public class CategoryDAO implements DefaultOperationsDAO<Category> {
 
         } catch (SQLException | URISyntaxException | ClassNotFoundException e) {
             throw new RuntimeException(e);
-        }
-        for (Category category:
-             categories) {
-            System.out.println(category.getId() + category.getName());
         }
         return categories;
     }
