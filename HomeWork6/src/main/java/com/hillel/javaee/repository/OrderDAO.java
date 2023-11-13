@@ -1,6 +1,6 @@
 package com.hillel.javaee.repository;
 
-import com.hillel.javaee.models.Order;
+import com.hillel.javaee.model.Order;
 
 import java.util.ArrayList;
 

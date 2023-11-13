@@ -8,11 +8,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
+
 public class DBConnectionPool {
     private static DataSource datasource;
-    private static final String connectionURL = "jdbc:postgresql://localhost:5432/shop";
-    private static final String password = "2000";
-    private static final String username = "postgres";
+    private static final Map<String, String> databaseProperties = SpringScriptUtility.
+            readResourceProperties("database.properties");
 
     private DBConnectionPool() {
 
@@ -21,10 +22,10 @@ public class DBConnectionPool {
     public static Connection getConnection() throws ClassNotFoundException, SQLException, URISyntaxException {
         if (datasource == null) {
             PoolProperties p = new PoolProperties();
-            p.setUrl(connectionURL);
+            p.setUrl(databaseProperties.get("url"));
             p.setDriverClassName("org.postgresql.Driver");
-            p.setUsername(username);
-            p.setPassword(password);
+            p.setUsername(databaseProperties.get("username"));
+            p.setPassword(databaseProperties.get("password"));
             p.setJmxEnabled(true);
             p.setTestWhileIdle(false);
             p.setTestOnBorrow(true);
@@ -42,7 +43,9 @@ public class DBConnectionPool {
             p.setJdbcInterceptors("org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" + "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
             datasource = new DataSource();
             datasource.setPoolProperties(p);
-            SpringScriptUtility.runScript(Paths.get(DBConnectionPool.class.getClassLoader().getResource("sqlScript.sql").toURI()).toString(), datasource.getConnection());
+            if (!datasource.getConnection().getMetaData().getTables("shop", "public", "customer", null).isBeforeFirst()) {
+                SpringScriptUtility.runScript(Paths.get(DBConnectionPool.class.getClassLoader().getResource("sql/sqlScript.sql").toURI()).toString(), datasource.getConnection());
+            }
         }
         return datasource.getConnection();
     }

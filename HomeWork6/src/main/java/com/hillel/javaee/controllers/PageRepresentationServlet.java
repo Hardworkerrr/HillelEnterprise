@@ -19,8 +19,11 @@ public class PageRepresentationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String[] URL = req.getRequestURL().toString().split("/");
-        req.getRequestDispatcher(URL[URL.length - 1] + ".jsp").forward(req, resp);
+        req.getRequestDispatcher(req.getHttpServletMapping().getMatchValue() + ".jsp").forward(req, resp);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    }
 }

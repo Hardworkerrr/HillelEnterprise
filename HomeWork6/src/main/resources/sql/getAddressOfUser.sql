@@ -1,0 +1,1 @@
+SELECT id, street, city, postal_code, country, customer_id FROM address where customer_id = ?

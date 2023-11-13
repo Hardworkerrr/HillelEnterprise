@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS customer
 (
     id           SERIAL PRIMARY KEY,
     name         VARCHAR(256),
-    phone_number VARCHAR(256),
-    email        VARCHAR(256),
+    phone_number VARCHAR(256) UNIQUE,
+    email        VARCHAR(256) UNIQUE ,
     birthday     DATE
 );
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS product
 CREATE TABLE IF NOT EXISTS credentials
 (
     id          SERIAL PRIMARY KEY,
-    username    VARCHAR(256),
+    username    VARCHAR(256) UNIQUE,
     password    VARCHAR(256),
     customer_id INT UNIQUE,
     is_active   BOOLEAN,
@@ -121,11 +121,11 @@ insert into address (id, street, city, postal_code, country, customer_id)
 values (5, '7413 Northview Hill', 'Perstorp', '284-32', 'Sweden', 4);
 
 insert into credentials (id, username, password, customer_id, is_active)
-values (1, 'lmillom0', 'eW7}i@1%0xl1O5U', 3, false);
+values (1, 'lmillom0', 'eW7}i@1%0xl1O5U', 3, true);
 insert into credentials (id, username, password, customer_id, is_active)
-values (2, 'acornbell1', 'aZ2#dGG?U', 1, false);
+values (2, 'acornbell1', 'aZ2#dGG?U', 1, true);
 insert into credentials (id, username, password, customer_id, is_active)
-values (3, 'dallery2', 'mN4_rTapn3ia4eXs', 5, false);
+values (3, 'dallery2', 'mN4_rTapn3ia4eXs', 5, true);
 insert into credentials (id, username, password, customer_id, is_active)
 values (4, 'sfairfull3', 'wO3*+2?hs19aZOjp', 2, true);
 insert into credentials (id, username, password, customer_id, is_active)
@@ -193,8 +193,7 @@ insert into orders (id, customer_id, order_date, payment_id)
 values (7, 4, '15/12/2023', 7);
 
 
-insert into order_details (id, order_id, product_id, units_price, products_quantity)
-values (1, 3, 1, 450, 3);
+
 insert into order_details (id, order_id, product_id, units_price, products_quantity)
 values (2, 3, 2, 90, 3);
 insert into order_details (id, order_id, product_id, units_price, products_quantity)
@@ -212,3 +211,6 @@ SELECT o.id, o.customer_id, o.order_date,x.product_id, x.order_id, p.name produc
     JOIN product as p ON x.product_id=p.id where p.id=3;
 
 SELECT category_id, name  FROM product_category JOIN category ON category_id=category.id WHERE product_id = 4;
+
+SELECT count(*) FROM customer;
+

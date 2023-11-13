@@ -1,8 +1,9 @@
 package com.hillel.javaee.repository;
 
 import com.hillel.javaee.dbmanager.DBConnectionPool;
-import com.hillel.javaee.models.Address;
-import com.hillel.javaee.models.Order;
+import com.hillel.javaee.model.Address;
+import com.hillel.javaee.model.Order;
+import com.hillel.javaee.utils.SpringScriptUtility;
 
 
 import java.net.URISyntaxException;
@@ -35,7 +36,8 @@ public class AddressDAO implements DefaultOperationsDAO<Address> {
         Address address = new Address();
         try {
             Connection connection = DBConnectionPool.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, street, city, postal_code, country, customer_id FROM address where customer_id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    SpringScriptUtility.readResourceSql("sql/getAddressOfUser.sql"));
             preparedStatement.setInt(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
