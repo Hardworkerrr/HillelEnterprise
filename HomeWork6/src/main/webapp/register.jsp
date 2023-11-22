@@ -6,7 +6,7 @@
     <title>Register</title>
 </head>
 <body>
-<form action="postProcess" method="post">
+<form action="postProcess" method="post" id="registerForm">
     <label for="nameReg">Full Name:</label>
     <input type="text" id="nameReg" name="nameReg"><br><br>
     <label for="emailReg">Email:</label>
@@ -17,7 +17,8 @@
     <input type="text" id="usernameReg" name="usernameReg"><br><br>
     <label for="passwordReg">Password:</label>
     <input type="text" id="passwordReg" name="passwordReg"><br><br>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Submit" id="buttonReg">
 </form>
+<script src="registerScript.js"></script>
 </body>
 </html>
