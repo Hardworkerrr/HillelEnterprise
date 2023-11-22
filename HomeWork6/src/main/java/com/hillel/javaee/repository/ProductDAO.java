@@ -25,6 +25,7 @@ public class ProductDAO implements DefaultOperationsDAO<Product> {
 
     @Override
     public ArrayList<Product> getAll() {
+        products = new ArrayList<>();
         try {
             Connection connection = DBConnectionPool.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -50,7 +51,26 @@ public class ProductDAO implements DefaultOperationsDAO<Product> {
 
     @Override
     public Product getById(int id) {
-        return null;
+        Product product = new Product();
+        try {
+            Connection connection = DBConnectionPool.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SpringScriptUtility.readResourceSql("sql/getProductById.sql"));
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                product.setId(id);
+                product.setName(resultSet.getString(2));
+                product.setCalories(resultSet.getDouble(3));
+                product.setPrice(resultSet.getDouble(4));
+                product.setQuantity(resultSet.getInt(5));
+                product.setCategories(new CategoryDAO().getProductCategoriesByID(resultSet.getInt(1)));
+            }
+            connection.close();
+
+        } catch (SQLException | URISyntaxException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return product;
     }
 
     @Override

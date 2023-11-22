@@ -34,7 +34,7 @@ function validateUsername(e) {
 }
 
 function validatePassword(e) {
-    if(passwordIsEmpty() || passwordContainsSpace() || checkPasswordLength() ){
+    if(passwordIsEmpty() || passwordContainsSpace() || checkPasswordLength() || passwordContainsBadSymbols()){
         e.preventDefault();
     }
 }
@@ -70,6 +70,18 @@ function checkPasswordLength(){
         parameter.setAttribute("id", "errorU");
         parameter.style.color = 'red';
         parameter.textContent = "Password can't be less than 6 symbols !";
+        form.insertBefore(parameter, form.childNodes[30]);
+        return true;
+    }
+}
+
+function passwordContainsBadSymbols(){
+    if(passwordField.value.isMatch("[/^%'?#<>%@]")){
+        clearErrors();
+        let parameter = document.createElement("p");
+        parameter.setAttribute("id", "errorU");
+        parameter.style.color = 'red';
+        parameter.textContent = "Unaccepted symbols in password !";
         form.insertBefore(parameter, form.childNodes[30]);
         return true;
     }
@@ -117,7 +129,7 @@ function validatePhoneNumber(e){
 }
 
 function validateEmail(e){
-    if(!emailField.value.isMatch("^(?:\\d{10}|\\w+@\\w+\\.\\w{2,3})$")){
+    if(!emailField.value.isMatch("^(?:\\d{10}|\\w+@\\w+\\w+\\.\\w{2,3})$")){
         clearErrors();
         let parameter = document.createElement("p");
         parameter.setAttribute("id", "errorEmail");
@@ -128,8 +140,9 @@ function validateEmail(e){
     }
 }
 
+
 function validateFullName(e){
-    if(!nameField.value.isMatch("^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$")){
+    if(!nameField.value.isMatch("^[A-Za-z]*( [A-Za-z])")){
         clearErrors();
         let parameter = document.createElement("p");
         parameter.setAttribute("id", "errorName");
