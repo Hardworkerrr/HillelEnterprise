@@ -1,0 +1,1 @@
+INSERT INTO customer (id, name, phone_number, email, birthday) VALUES (?,?,?,?,?)

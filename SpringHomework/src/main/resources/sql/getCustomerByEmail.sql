@@ -1,0 +1,1 @@
+SELECT id,name,phone_number,birthday FROM customer WHERE email = ?
