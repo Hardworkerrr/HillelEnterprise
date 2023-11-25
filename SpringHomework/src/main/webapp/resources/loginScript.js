@@ -60,7 +60,7 @@ function passwordContainsBadSymbols(){
         parameter.setAttribute("id", "errorU");
         parameter.style.color = 'red';
         parameter.textContent = "Unaccepted symbols in password !";
-        form.insertBefore(parameter, form.childNodes[10]);
+        form.insertBefore(parameter, form.childNodes[14]);
         return true;
     }
 }
@@ -72,7 +72,7 @@ function passwordIsEmpty(){
         parameter.setAttribute("id", "errorU");
         parameter.style.color = 'red';
         parameter.textContent = "Password can't be empty !";
-        form.insertBefore(parameter, form.childNodes[10]);
+        form.insertBefore(parameter, form.childNodes[14]);
         return true;
     }
 }
@@ -84,7 +84,7 @@ function passwordContainsSpace() {
         parameter.setAttribute("id", "errorU");
         parameter.style.color = 'red';
         parameter.textContent = "Password can't contain spaces !";
-        form.insertBefore(parameter, form.childNodes[10]);
+        form.insertBefore(parameter, form.childNodes[14]);
         return true;
     }
 }
@@ -96,7 +96,7 @@ function checkPasswordLength(){
         parameter.setAttribute("id", "errorU");
         parameter.style.color = 'red';
         parameter.textContent = "Password can't be less than 6 symbols !";
-        form.insertBefore(parameter, form.childNodes[10]);
+        form.insertBefore(parameter, form.childNodes[14]);
         return true;
     }
 }
