@@ -48,8 +48,20 @@ function checkUsernameLength(htmlElement, e) {
 }
 
 function validatePassword(e) {
-    if(passwordIsEmpty() || passwordContainsSpace() || checkPasswordLength() ){
+    if(passwordIsEmpty() || passwordContainsSpace() || checkPasswordLength() || passwordContainsBadSymbols()){
         e.preventDefault();
+    }
+}
+
+function passwordContainsBadSymbols(){
+    if(passwordField.value.isMatch("[/^%'?#<>%@]")){
+        clearErrors();
+        let parameter = document.createElement("p");
+        parameter.setAttribute("id", "errorU");
+        parameter.style.color = 'red';
+        parameter.textContent = "Unaccepted symbols in password !";
+        form.insertBefore(parameter, form.childNodes[10]);
+        return true;
     }
 }
 

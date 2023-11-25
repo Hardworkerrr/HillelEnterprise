@@ -17,4 +17,9 @@ public class ProductManipulationService implements ProductManipulation {
     public ArrayList<Product> getAllProducts() {
         return productDAO.getAll();
     }
+
+    @Override
+    public Product getProductById(int id) {
+        return productDAO.getById(id);
+    }
 }
