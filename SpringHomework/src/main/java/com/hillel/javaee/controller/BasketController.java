@@ -53,9 +53,9 @@ public class BasketController {
             if (selectedItemsIds.contains(quantityId)) {
                 productsToOrder.put(productManipulationService.getProductById(Integer.parseInt(quantityId)),
                         req.getParameter(quantityParameter));
-                attributes.addFlashAttribute("productsToOrder", productsToOrder);
             }
         });
+        attributes.addFlashAttribute("productsToOrder", productsToOrder);
         return new RedirectView("checkout");
     }
 }
