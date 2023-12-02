@@ -33,6 +33,9 @@
         <input type="hidden" id="productId" name="productId" value="${product.id}">
         <input type="submit" value="Add to basket">
     </form>
+    <form action="http://localhost:8080/ProductsRestAPI/products/${product.id}">
+        <input type="submit" value="Show product" style="margin-top: 5px">
+    </form>
     <p>----------------------------</p>
 </c:forEach>
 </body>
