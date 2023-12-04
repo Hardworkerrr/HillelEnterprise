@@ -14,11 +14,7 @@ public class ProductService implements ProductServiceInterface {
     @Override
     public List<Product> getAllProducts() {
         List<Product> productList;
-        try (SessionFactory sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(Category.class)
-                .buildSessionFactory()) {
+        try (SessionFactory sessionFactory = getSessionFactory()) {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             productList = session.createQuery("from Product").getResultList();
@@ -30,11 +26,7 @@ public class ProductService implements ProductServiceInterface {
     @Override
     public Product getProductById(int id) {
         Product product;
-        try (SessionFactory sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(Category.class)
-                .buildSessionFactory()) {
+        try (SessionFactory sessionFactory = getSessionFactory()) {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             if ((product = session.get(Product.class, id)) == null) {
@@ -47,11 +39,7 @@ public class ProductService implements ProductServiceInterface {
 
     @Override
     public Product addProduct(Product product) {
-        try (SessionFactory sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(Category.class)
-                .buildSessionFactory()) {
+        try (SessionFactory sessionFactory = getSessionFactory()) {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             for (Category category :
@@ -71,11 +59,7 @@ public class ProductService implements ProductServiceInterface {
     @Override
     public Product updateProduct(Product product) {
         Product oldProduct;
-        try (SessionFactory sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(Category.class)
-                .buildSessionFactory()) {
+        try (SessionFactory sessionFactory = getSessionFactory()) {
             if (product.getId() == 0) {
                 throw new BadEntityFormat("Id of product can't be 0");
             }
@@ -106,16 +90,20 @@ public class ProductService implements ProductServiceInterface {
 
     @Override
     public String removeProduct(int id) {
-        try (SessionFactory sessionFactory = new Configuration()
-                .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(Category.class)
-                .buildSessionFactory()) {
+        try (SessionFactory sessionFactory = getSessionFactory()) {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             session.remove(getProductById(id));
             session.getTransaction().commit();
         }
         return "Successfully deleted";
+    }
+
+    private SessionFactory getSessionFactory() {
+        return new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Product.class)
+                .addAnnotatedClass(Category.class)
+                .buildSessionFactory();
     }
 }
