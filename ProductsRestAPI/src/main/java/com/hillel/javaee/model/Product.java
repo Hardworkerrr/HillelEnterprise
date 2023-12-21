@@ -1,20 +1,38 @@
 package com.hillel.javaee.model;
-
-import java.io.Serializable;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.List;
 
-@Component
-@Scope("prototype")
-public class Product implements Serializable {
+
+
+@Entity
+@Table(name = "product")
+public class Product {
+    @Column(name = "id")
+    @Id
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "calories")
     private double calories;
+    @Column(name = "price")
     private double price;
+    @Column(name = "quantity")
     private int quantity;
-    private ArrayList<Category> categories = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,CascadeType.REMOVE})
+    @JoinTable(name = "product_category",
+            joinColumns =@JoinColumn(name = "product_id"),
+            inverseJoinColumns =@JoinColumn(name = "category_id"))
+    private List<Category> categories = new ArrayList<>();
 
 
     public Product() {
@@ -61,11 +79,11 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
-    public ArrayList<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
