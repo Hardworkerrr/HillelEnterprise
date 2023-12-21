@@ -1,5 +1,6 @@
 package com.hillel.javaee.model;
 
+import java.io.Serializable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 
 @Component
 @Scope("prototype")
-public class Product {
+public class Product implements Serializable {
     private int id;
     private String name;
     private double calories;
